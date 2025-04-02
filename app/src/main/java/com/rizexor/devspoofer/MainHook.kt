@@ -51,12 +51,18 @@ class MainHook : IXposedHookLoadPackage {
             Integer::class.javaPrimitiveType,
             object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
-                    XposedBridge.log("[+] Global.getInt called")
+                    XposedBridge.log("[+] Global.getInt called -> ${param.args[1] as String}")
 
-                    if (param.args[1] as String == "development_settings_enabled") {
+                    var key = param.args[1] as String
+                    if (key == "development_settings_enabled") {
+                        param.setResult(0);
+                    } else if (key == "adb_wifi_enabled") {
+                        param.setResult(0);
+                    } else if (key == "adb_enabled") {
                         param.setResult(0);
                     }
                 }
-            })
+            }
+        )
     }
 }
